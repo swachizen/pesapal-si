@@ -1,26 +1,637 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@custom-variant dark (&:is(.dark *));
+
+/* ==========================================================================
+   1. FONTS  (self-hosted, files in /public/fonts)
+   Adjust the file names below to match yours.
+   Preload the two variable files in app/layout.tsx for best LCP.
+   ========================================================================== */
+
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/Inter-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
 }
+
+@font-face {
+  font-family: "Space Grotesk";
+  src: url("/fonts/SpaceGrotesk-Variable.woff2") format("woff2");
+  font-weight: 300 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Metric-matched fallback: removes layout shift while Inter loads */
+@font-face {
+  font-family: "Inter Fallback";
+  src: local("Arial");
+  size-adjust: 107.4%;
+  ascent-override: 90.2%;
+  descent-override: 22.5%;
+  line-gap-override: 0%;
+}
+
+/* ==========================================================================
+   2. THEME  (maps tokens to Tailwind utilities)
+   ========================================================================== */
 
 @theme inline {
+  /* Typography */
+  --font-sans: var(--font-body);
+  --font-heading: var(--font-display);
+  --font-mono: var(--font-geist-mono, var(--font-code));
+
+  /* Core */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-placeholder: var(--placeholder);
+
+  /* Brand + links (use text-link for text, bg-brand for solid fills) */
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
+  --color-link: var(--link);
+
+  /* Status: solid, text-on-solid, soft background, border, text-on-soft */
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-success-soft: var(--success-soft);
+  --color-success-border: var(--success-edge);
+  --color-success-text: var(--success-ink);
+
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-warning-soft: var(--warning-soft);
+  --color-warning-border: var(--warning-edge);
+  --color-warning-text: var(--warning-ink);
+
+  --color-error: var(--destructive);
+  --color-error-foreground: var(--destructive-foreground);
+  --color-error-soft: var(--error-soft);
+  --color-error-border: var(--error-edge);
+  --color-error-text: var(--error-ink);
+
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  --color-info-soft: var(--info-soft);
+  --color-info-border: var(--info-edge);
+  --color-info-text: var(--info-ink);
+
+  /* Charts */
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  /* Sidebar */
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Radius */
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+
+  /* Geist-style border shadows (shadow-border, shadow-floating) */
+  --shadow-border: var(--elevation-border);
+  --shadow-floating: var(--elevation-floating);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ==========================================================================
+   3. LIGHT THEME
+   ========================================================================== */
+
+:root {
+  color-scheme: light;
+
+  /* Fonts */
+  --font-body: "Inter", "Inter Fallback", ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Space Grotesk", "Inter", "Inter Fallback", ui-sans-serif, system-ui,
+    -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --font-code: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    "Liberation Mono", monospace;
+
+  /* Surfaces */
+  --background: #ffffff;
+  --foreground: #000000;
+  --card: #fafafa;
+  --card-foreground: #000000;
+  --popover: #ffffff;
+  --popover-foreground: #000000;
+
+  /* Actions */
+  --primary: #000000;
+  --primary-foreground: #ffffff;
+  --secondary: #f2f2f2;
+  --secondary-foreground: #000000;
+  --accent: #f2f2f2;
+  --accent-foreground: #000000;
+
+  /* Text + lines */
+  --muted: #fafafa;
+  --muted-foreground: #666666;
+  --placeholder: #a1a1a1;
+  --border: #eaeaea;
+  --border-strong: #cccccc;
+  --input: #eaeaea;
+  --ring: #0070f3;
+
+  /* Brand (Geist blue). #0070F3 is 4.4:1 on white, so text links and
+     solid buttons use the slightly deeper #0068D6 to pass WCAG AA (4.5:1). */
+  --brand: #0068d6;
+  --brand-foreground: #ffffff;
+  --link: #0068d6;
+
+  /* Status */
+  --success: #1a7f37;
+  --success-foreground: #ffffff;
+  --success-soft: #eefbf1;
+  --success-edge: #b7e4c3;
+  --success-ink: #116329;
+
+  --warning: #f5a623;
+  --warning-foreground: #000000;
+  --warning-soft: #fff8e6;
+  --warning-edge: #f7d78a;
+  --warning-ink: #8a5200;
+
+  --destructive: #d92d20;
+  --destructive-foreground: #ffffff;
+  --error-soft: #fef3f2;
+  --error-edge: #fecdca;
+  --error-ink: #b42318;
+
+  --info: #0068d6;
+  --info-foreground: #ffffff;
+  --info-soft: #f0f7ff;
+  --info-edge: #b9d8fb;
+  --info-ink: #0050b3;
+
+  /* Charts */
+  --chart-1: #0070f3;
+  --chart-2: #7928ca;
+  --chart-3: #e5006f;
+  --chart-4: #d98200;
+  --chart-5: #0e9f7e;
+
+  /* Sidebar */
+  --sidebar: #fafafa;
+  --sidebar-foreground: #000000;
+  --sidebar-primary: #000000;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f2f2f2;
+  --sidebar-accent-foreground: #000000;
+  --sidebar-border: #eaeaea;
+  --sidebar-ring: #0070f3;
+
+  /* Shape + elevation */
+  --radius: 0.625rem;
+  --elevation-border: 0 0 0 1px rgb(0 0 0 / 0.08);
+  --elevation-floating: 0 0 0 1px rgb(0 0 0 / 0.08), 0 4px 8px rgb(0 0 0 / 0.04),
+    0 12px 24px rgb(0 0 0 / 0.06);
+
+  /* Selection */
+  --selection: rgb(0 112 243 / 0.2);
+}
+
+/* ==========================================================================
+   4. DARK THEME
+   ========================================================================== */
+
+.dark {
+  color-scheme: dark;
+
+  /* Surfaces */
+  --background: #000000;
+  --foreground: #ffffff;
+  --card: #0a0a0a;
+  --card-foreground: #ffffff;
+  --popover: #0a0a0a;
+  --popover-foreground: #ffffff;
+
+  /* Actions */
+  --primary: #ffffff;
+  --primary-foreground: #000000;
+  --secondary: #171717;
+  --secondary-foreground: #ffffff;
+  --accent: #171717;
+  --accent-foreground: #ffffff;
+
+  /* Text + lines */
+  --muted: #0a0a0a;
+  --muted-foreground: #888888;
+  --placeholder: #666666;
+  --border: #222222;
+  --border-strong: #444444;
+  --input: #222222;
+  --ring: #0070f3;
+
+  /* Brand */
+  --brand: #0068d6;
+  --brand-foreground: #ffffff;
+  --link: #3291ff;
+
+  /* Status */
+  --success: #3fb950;
+  --success-foreground: #000000;
+  --success-soft: #0b1f13;
+  --success-edge: #174a2a;
+  --success-ink: #5adb7f;
+
+  --warning: #f5a623;
+  --warning-foreground: #000000;
+  --warning-soft: #261a05;
+  --warning-edge: #5c3d0a;
+  --warning-ink: #ffb224;
+
+  --destructive: #ff6166;
+  --destructive-foreground: #000000;
+  --error-soft: #2a0d0f;
+  --error-edge: #5a1d21;
+  --error-ink: #ff8589;
+
+  --info: #3291ff;
+  --info-foreground: #000000;
+  --info-soft: #07182e;
+  --info-edge: #0f3a73;
+  --info-ink: #6cb2ff;
+
+  /* Charts */
+  --chart-1: #3291ff;
+  --chart-2: #a77bf0;
+  --chart-3: #ff4d9d;
+  --chart-4: #f5a623;
+  --chart-5: #3ddbb0;
+
+  /* Sidebar */
+  --sidebar: #0a0a0a;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #0068d6;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #171717;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #222222;
+  --sidebar-ring: #0070f3;
+
+  /* Elevation */
+  --elevation-border: 0 0 0 1px rgb(255 255 255 / 0.1);
+  --elevation-floating: 0 0 0 1px rgb(255 255 255 / 0.1), 0 8px 24px rgb(0 0 0 / 0.6);
+
+  /* Selection */
+  --selection: rgb(50 145 255 / 0.35);
+}
+
+/* ==========================================================================
+   5. BASE
+   ========================================================================== */
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    @apply font-sans;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+    scroll-padding-top: 5rem;
+    scrollbar-gutter: stable; /* prevents layout shift when modals lock scroll */
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-strong) transparent;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    min-height: 100dvh;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.6;
+    letter-spacing: -0.006em;
+    font-feature-settings: "calt" 1, "kern" 1;
+    font-optical-sizing: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  /* Headings: Space Grotesk, tight tracking, fluid sizes */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+    color: var(--foreground);
+    text-wrap: balance;
+  }
+
+  h1 {
+    font-size: clamp(2.25rem, 1.6rem + 3vw, 3.5rem);
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: -0.035em;
+  }
+
+  h2 {
+    font-size: clamp(1.75rem, 1.4rem + 1.6vw, 2.5rem);
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.028em;
+  }
+
+  h3 {
+    font-size: clamp(1.375rem, 1.2rem + 0.8vw, 1.75rem);
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.022em;
+  }
+
+  h4 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -0.016em;
+  }
+
+  h5 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+  }
+
+  h6 {
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: 0;
+  }
+
+  p,
+  li {
+    text-wrap: pretty;
+  }
+
+  small {
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+
+  strong,
+  b {
+    font-weight: 600;
+  }
+
+  /* Code */
+  code,
+  kbd,
+  samp,
+  pre {
+    font-family: var(--font-mono);
+    font-size: 0.875em;
+  }
+
+  :not(pre) > code {
+    padding: 0.15em 0.4em;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--muted);
+  }
+
+  /* Media: explicit sizing keeps CLS at zero */
+  img,
+  picture,
+  video,
+  canvas,
+  svg {
+    display: block;
+    max-width: 100%;
+  }
+
+  img,
+  video {
+    height: auto;
+  }
+
+  /* Interaction */
+  button,
+  [role="button"],
+  summary,
+  select,
+  input[type="checkbox"],
+  input[type="radio"] {
+    touch-action: manipulation;
+  }
+
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]) {
+    cursor: pointer;
+  }
+
+  :disabled,
+  [aria-disabled="true"] {
+    cursor: not-allowed;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: var(--selection);
+    color: inherit;
+  }
+
+  ::placeholder {
+    color: var(--placeholder);
+    opacity: 1;
+  }
+
+  /* Autofill matches the active theme instead of browser yellow/blue */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  textarea:-webkit-autofill,
+  select:-webkit-autofill {
+    -webkit-text-fill-color: var(--foreground);
+    caret-color: var(--foreground);
+    box-shadow: 0 0 0 1000px var(--background) inset;
+    transition: background-color 9999s ease-out;
+  }
+
+  /* Inline validation: works with any input using aria-invalid */
+  [aria-invalid="true"] {
+    border-color: var(--destructive);
+  }
+
+  [aria-invalid="true"]:focus-visible {
+    outline-color: var(--destructive);
+  }
+
+  /* Sonner toasts are themed in components/ui/sonner.tsx */
+
+  /* Thin scrollbars (WebKit) */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--border-strong);
+    border: 2px solid var(--background);
+    border-radius: 999px;
+  }
+
+  /* Motion: smooth only for people who allow it */
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* Forced-colors (Windows high contrast) */
+  @media (forced-colors: active) {
+    :focus-visible {
+      outline-color: Highlight;
+    }
+  }
+
+  @media print {
+    :root {
+      --background: #ffffff;
+      --foreground: #000000;
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ==========================================================================
+   6. COMPONENT HELPERS
+   ========================================================================== */
+
+@layer components {
+  /* Inline field messages: <p class="field-error" role="alert">…</p> */
+  .field-error {
+    @apply mt-1.5 text-sm leading-snug text-destructive;
+  }
+
+  .field-success {
+    @apply mt-1.5 text-sm leading-snug text-success-text;
+  }
+
+  .field-hint {
+    @apply mt-1.5 text-sm leading-snug text-muted-foreground;
+  }
+
+  /* Banner/alert surfaces: <div class="status status-success">…</div> */
+  .status {
+    @apply rounded-lg border px-4 py-3 text-sm leading-snug;
+  }
+
+  .status-success {
+    @apply border-success-border bg-success-soft text-success-text;
+  }
+
+  .status-warning {
+    @apply border-warning-border bg-warning-soft text-warning-text;
+  }
+
+  .status-error {
+    @apply border-error-border bg-error-soft text-error-text;
+  }
+
+  .status-info {
+    @apply border-info-border bg-info-soft text-info-text;
+  }
+
+  /* Loading placeholder: <div class="skeleton h-4 w-32" /> */
+  .skeleton {
+    @apply animate-pulse rounded-md bg-muted;
+    background-color: var(--secondary);
+  }
 }
+
+/* ==========================================================================
+   7. UTILITIES
+   ========================================================================== */
+
+/* Skip rendering offscreen sections (big win for LCP/INP on long pages) */
+@utility cv-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 600px;
+}
+
+/* Visible only on keyboard focus: <a href="#main" class="skip-link">Skip to content</a> */
+@utility skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -4rem;
+  z-index: 100;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md);
+  background: var(--primary);
+  color: var(--primary-foreground);
+  font-weight: 500;
+  transition: top 0.15s ease-out;
+
+  &:focus {
+    top: 1rem;
+  }
+}
+
+@utility font-display {
+  font-family: var(--font-display);
+}
+
