@@ -4,7 +4,8 @@ Agentic commerce for Kenyan freelancers: PayPal USD in, WhatsApp agent, PDF invo
 
 ## Install
 ```bash
-npm i ai@^5 @ai-sdk/google@^2 zod@^3.25.76 twilio @react-pdf/renderer server-only
+npm i ai@^5 @ai-sdk/google@^2 zod@^3.25.76 @react-pdf/renderer server-only
+npm uninstall twilio
 npx shadcn@latest add button card badge table skeleton sonner
 ```
 1. Copy `.env.example` to `.env.local` and fill it in.

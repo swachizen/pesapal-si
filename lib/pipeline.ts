@@ -3,11 +3,11 @@ import { randomUUID } from "node:crypto";
 import { analyzePayment } from "@/lib/ai/agent";
 import { env } from "@/lib/env";
 import { fmtKes } from "@/lib/format";
-import { paidMessage } from "@/lib/messages";
+import { paidBody } from "@/lib/messages";
 import { computePayout, getFxRate } from "@/lib/money";
 import { getOrderDetails, type OrderDetails } from "@/lib/paypal/client";
 import { appendEvent, paypalIdExists } from "@/lib/transactions";
-import { sendWhatsApp } from "@/lib/twilio/whatsapp";
+import { sendWhatsApp } from "@/lib/whatsapp/cloud";
 import { getSupabaseAdminClient } from "@/lib/supabase/admin";
 import type { Transaction, TxEvent } from "@/lib/types";
 
@@ -114,11 +114,15 @@ export async function processPayment(input: PaymentInput): Promise<PipelineResul
   }
   const tx = data as Transaction;
 
-  const sent = await sendWhatsApp(paidMessage(tx), `${env.appUrl}/api/invoice/${tx.id}`);
+  const sent = await sendWhatsApp(paidBody(tx), `${env.appUrl}/api/invoice/${tx.id}`, [
+    { id: "1", title: "Send invoice" },
+    { id: "2", title: "KRA report" },
+    { id: "3", title: "M-Pesa payout" },
+  ]);
   await appendEvent(
     tx.id,
     sent.simulated
-      ? "WhatsApp summary prepared (simulated, Twilio not configured)"
+      ? "WhatsApp summary prepared (simulated, WhatsApp not configured)"
       : sent.ok
         ? "WhatsApp summary and PDF invoice sent"
         : "WhatsApp delivery failed"

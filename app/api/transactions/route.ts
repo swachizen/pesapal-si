@@ -16,7 +16,7 @@ export async function GET() {
       totRate: env.totRate,
       reportUrl: reportUrl(currentPeriod()),
       demoEnabled: env.demoEnabled,
-      whatsappLive: Boolean(env.twilioSid && env.twilioToken && env.ownerWhatsapp),
+      whatsappLive: env.whatsappConfigured,
     };
     return NextResponse.json(payload, { headers: { "Cache-Control": "no-store" } });
   } catch (e) {

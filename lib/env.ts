@@ -72,20 +72,32 @@ export const env = {
     return optional("GEMINI_MODEL", "gemini-3.8-flash");
   },
 
-  get twilioSid() {
-    return optional("TWILIO_ACCOUNT_SID");
+  get whatsappToken() {
+    return optional("WHATSAPP_ACCESS_TOKEN");
   },
-  get twilioToken() {
-    return optional("TWILIO_AUTH_TOKEN");
+  get whatsappPhoneId() {
+    return optional("WHATSAPP_PHONE_NUMBER_ID");
   },
-  get twilioFrom() {
-    return optional("TWILIO_WHATSAPP_FROM", "whatsapp:+17372508034");
+  get whatsappVerifyToken() {
+    return optional("WHATSAPP_VERIFY_TOKEN");
   },
+  get whatsappAppSecret() {
+    return optional("WHATSAPP_APP_SECRET");
+  },
+  get whatsappApiVersion() {
+    return optional("WHATSAPP_API_VERSION", "v23.0");
+  },
+  /** Owner number as digits with country code, e.g. 2547XXXXXXXX. */
   get ownerWhatsapp() {
-    return optional("OWNER_WHATSAPP");
+    const d = optional("OWNER_WHATSAPP").replace(/\D/g, "");
+    return d.startsWith("0") ? `254${d.slice(1)}` : d;
   },
-  get skipTwilioSignature() {
-    return optional("SKIP_TWILIO_SIGNATURE") === "true";
+  get whatsappConfigured() {
+    return (
+      optional("WHATSAPP_ACCESS_TOKEN").length > 0 &&
+      optional("WHATSAPP_PHONE_NUMBER_ID").length > 0 &&
+      optional("OWNER_WHATSAPP").length > 0
+    );
   },
 
   get darajaMode() {

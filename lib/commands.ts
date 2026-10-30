@@ -15,7 +15,7 @@ import {
   listTransactionsForPeriod,
   updateTransaction,
 } from "@/lib/transactions";
-import { sendWhatsApp } from "@/lib/twilio/whatsapp";
+import { sendWhatsApp } from "@/lib/whatsapp/cloud";
 import type { Transaction } from "@/lib/types";
 
 const MIN_PAYOUT_KES = 10;
@@ -42,7 +42,12 @@ async function sendInvoice(tx: Transaction): Promise<void> {
   }
   await appendEvent(tx.id, `Invoice emailed to ${to}${result.simulated ? " (simulated)" : ""}`);
   await sendWhatsApp(
-    `Done, Boss. Invoice ${tx.invoice_no} sent to ${to}${result.simulated ? " (demo mode, email simulated)" : ""}.\n\nNext:\n2. KRA report\n3. Payout to M-Pesa`
+    `Done, Boss. Invoice ${tx.invoice_no} sent to ${to}${result.simulated ? " (demo mode, email simulated)" : ""}.\n\nWhat next?`,
+    undefined,
+    [
+      { id: "2", title: "KRA report" },
+      { id: "3", title: "M-Pesa payout" },
+    ]
   );
 }
 
@@ -58,10 +63,12 @@ async function sendKraReport(tx: Transaction): Promise<void> {
       `Indicative tax (${(env.totRate * 100).toFixed(1)}%): ${fmtKes(sum.totKes)}`,
       "",
       "Please confirm your tax regime and rate on iTax before filing.",
-      "",
-      "Next:\n1. Send invoice to client\n3. Payout to M-Pesa",
     ].join("\n"),
-    reportUrl(period)
+    reportUrl(period),
+    [
+      { id: "1", title: "Send invoice" },
+      { id: "3", title: "M-Pesa payout" },
+    ]
   );
 }
 
@@ -83,8 +90,13 @@ async function draftPayout(tx: Transaction): Promise<void> {
       `Amount: KES ${amount}`,
       `To: ${maskPhone(env.payoutPhone || "254700000000")}`,
       "",
-      "Reply *YES* to approve or *NO* to cancel.",
-    ].join("\n")
+      "Tap Approve to send the money, or Cancel. (You can also reply YES or NO.)",
+    ].join("\n"),
+    undefined,
+    [
+      { id: "yes", title: "Approve" },
+      { id: "no", title: "Cancel" },
+    ]
   );
 }
 
@@ -109,8 +121,13 @@ async function executePayout(tx: Transaction): Promise<void> {
       `Reference: ${result.reference}`,
       `Mode: ${result.mode === "live" ? "Daraja sandbox" : "Daraja mock"}`,
       "",
-      "Anything else?\n1. Send invoice to client\n2. KRA report",
-    ].join("\n")
+      "Anything else?",
+    ].join("\n"),
+    undefined,
+    [
+      { id: "1", title: "Send invoice" },
+      { id: "2", title: "KRA report" },
+    ]
   );
 }
 

@@ -17,3 +17,10 @@ export function paidMessage(tx: Transaction): string {
   ].join("\n");
 }
 
+export function paidBody(tx: Transaction): string {
+  return [
+    `Boss, *${tx.client_name}* paid *${fmtUsd(tx.usd_gross)}* (*${fmtKes(tx.kes_gross)}*).`,
+    `I have made your invoice (${tx.invoice_no}), what's next?`,
+  ].join("\n");
+}
+
