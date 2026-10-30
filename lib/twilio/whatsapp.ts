@@ -20,14 +20,21 @@ export async function sendWhatsApp(body: string, mediaUrl?: string): Promise<Sen
     console.log("[whatsapp:simulated]", body, mediaUrl ?? "");
     return { ok: true, simulated: true };
   }
+  const client = twilio(env.twilioSid, env.twilioToken);
+  const base = { from: toWhatsAppAddress(env.twilioFrom), to: toWhatsAppAddress(to) };
+
+  if (mediaUrl && mediaUrl.startsWith("https://")) {
+    try {
+      await client.messages.create({ ...base, body, mediaUrl: [mediaUrl] });
+      return { ok: true, simulated: false };
+    } catch (e) {
+      console.error("[whatsapp] media send failed, retrying with link:", errMsg(e));
+    }
+  }
+
   try {
-    const client = twilio(env.twilioSid, env.twilioToken);
-    await client.messages.create({
-      from: toWhatsAppAddress(env.twilioFrom),
-      to: toWhatsAppAddress(to),
-      body,
-      ...(mediaUrl ? { mediaUrl: [mediaUrl] } : {}),
-    });
+    const text = mediaUrl ? `${body}\n\nInvoice PDF: ${mediaUrl}` : body;
+    await client.messages.create({ ...base, body: text });
     return { ok: true, simulated: false };
   } catch (e) {
     console.error("[whatsapp] send failed:", errMsg(e));

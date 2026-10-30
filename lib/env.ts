@@ -69,7 +69,7 @@ export const env = {
     return optional("GOOGLE_GENERATIVE_AI_API_KEY").length > 0;
   },
   get geminiModel() {
-    return optional("GEMINI_MODEL", "gemini-2.5-flash");
+    return optional("GEMINI_MODEL", "gemini-3.8-flash");
   },
 
   get twilioSid() {
@@ -79,7 +79,7 @@ export const env = {
     return optional("TWILIO_AUTH_TOKEN");
   },
   get twilioFrom() {
-    return optional("TWILIO_WHATSAPP_FROM", "whatsapp:+14155238886");
+    return optional("TWILIO_WHATSAPP_FROM", "whatsapp:+17372508034");
   },
   get ownerWhatsapp() {
     return optional("OWNER_WHATSAPP");
