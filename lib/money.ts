@@ -4,7 +4,7 @@ import type { Transaction } from "@/lib/types";
 
 export const round2 = (n: number) => Math.round((n + Number.EPSILON) * 100) / 100;
 
-/** Live USD to KES rate from ExchangeRate-API's open endpoint, with a safe fallback. */
+/** Live USD to KES rate from ExchangeRate-API's open endpoint, cached, with a safe fallback. */
 let fxCache: { rate: number; expiresAt: number } | null = null;
 let fxInflight: Promise<number> | null = null;
 

@@ -3,6 +3,8 @@ import { env } from "@/lib/env";
 import { verifyWebhookSignature } from "@/lib/paypal/client";
 import { processPayment } from "@/lib/pipeline";
 
+export const maxDuration = 60;
+
 interface PayPalEvent {
   event_type?: string;
   resource?: {

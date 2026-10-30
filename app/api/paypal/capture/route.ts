@@ -3,6 +3,8 @@ import { env } from "@/lib/env";
 import { captureOrder } from "@/lib/paypal/client";
 import { processPayment } from "@/lib/pipeline";
 
+export const maxDuration = 60;
+
 // PayPal redirects the buyer here after approval: /api/paypal/capture?token=ORDER_ID
 export async function GET(req: Request) {
   const token = new URL(req.url).searchParams.get("token");

@@ -66,11 +66,12 @@ export async function analyzePayment(i: AnalyzeInput): Promise<PaymentAnalysis &
       system:
         "You are the bookkeeping agent for a Kenyan freelancer paid in USD through PayPal. Read the payment note and return clean structured data. Keep wording professional, plain and concise. Never invent amounts.",
       prompt: `Payment note: "${i.note}"\nPayer name on PayPal: ${i.payerName ?? "unknown"}\nAmount: USD ${i.usd.toFixed(2)}\nUSD to KES rate: ${i.fx.toFixed(2)}\nInvoice number: ${i.invoiceNo}`,
-      abortSignal: AbortSignal.timeout(12_000),
+      abortSignal: AbortSignal.timeout(25_000),
+      maxRetries: 0,
     });
     return { ...object, source: "gemini" };
   } catch (e) {
-    console.error("[agent] Gemini analysis failed, using fallback", e);
+    console.error("[agent] Gemini failed, using fallback:", e instanceof Error ? e.message : "unknown");
     return { ...fallbackAnalysis(i), source: "fallback" };
   }
 }

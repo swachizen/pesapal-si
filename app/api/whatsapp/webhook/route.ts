@@ -3,6 +3,8 @@ import { handleCommand } from "@/lib/commands";
 import { env } from "@/lib/env";
 import { sendWhatsApp, toWhatsAppAddress, validateTwilioRequest } from "@/lib/twilio/whatsapp";
 
+export const maxDuration = 60;
+
 const emptyTwiml = () =>
   new Response("<Response></Response>", { headers: { "Content-Type": "text/xml" } });
 
