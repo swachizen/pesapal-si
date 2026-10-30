@@ -79,7 +79,7 @@ export const env = {
     return optional("TWILIO_AUTH_TOKEN");
   },
   get twilioFrom() {
-    return optional("TWILIO_WHATSAPP_FROM", "whatsapp:+14155238886");
+    return optional("TWILIO_WHATSAPP_FROM", "whatsapp:+17372508034");
   },
   get ownerWhatsapp() {
     return optional("OWNER_WHATSAPP");
